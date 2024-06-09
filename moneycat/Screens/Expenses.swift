@@ -8,7 +8,7 @@
 import SwiftUI
 import RealmSwift
 
-class Expense: Object {
+class Expense: Object, Identifiable {
     @objc dynamic var id = UUID().uuidString
     @objc dynamic var amount = 0.0
     @objc dynamic var category = ""
@@ -21,29 +21,43 @@ class Expense: Object {
     }
 }
 
-struct ExpensesView: View {
-    let realm = try! Realm()
-    let expenseAmounts: [Double] // Add this property
+class ExpensesViewModel: ObservableObject {
+    private var realm: Realm
+    @Published var expenses: Results<Expense>
+    @Published var expenseAmounts: [Double] = []
 
-    var expenses: Results<Expense> {
-        realm.objects(Expense.self)
+    init() {
+        do {
+            realm = try Realm()
+            expenses = realm.objects(Expense.self)
+            calculateExpenseAmounts()
+        } catch {
+            fatalError("Failed to open Realm: \(error)")
+        }
+    }
+
+    private func calculateExpenseAmounts() {
+        expenseAmounts = expenses.map { $0.amount }
     }
 
     var totalExpenses: Double {
         expenses.reduce(0) { $0 + $1.amount }
     }
+}
+
+struct ExpensesView: View {
+    @StateObject private var viewModel = ExpensesViewModel()
 
     var body: some View {
         NavigationView {
             VStack {
-                // Pass expenseAmounts to BarChart
-                BarChart(data: expenseAmounts)
+                BarChart(data: viewModel.expenseAmounts)
                 Spacer()
                 NavigationLink(destination: Add()) {
                     Image(systemName: "plus.circle")
                         .font(.system(size: 45))
                         .padding()
-                        .foregroundColor(.white)
+                        .foregroundColor(.blue) // Changed to blue for better visibility
                 }
                 .buttonStyle(PlainButtonStyle())
             }
@@ -71,8 +85,7 @@ struct BarChart: View {
 
 struct Expenses_Previews: PreviewProvider {
     static var previews: some View {
-        // Since Expenses_Previews previews ExpensesView, let's pass some sample data to it
         let sampleData: [Double] = [100, 200, 150, 300]
-        return ExpensesView(expenseAmounts: sampleData)
+        return ExpensesView().environmentObject(ExpensesViewModel())
     }
 }

@@ -9,24 +9,24 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-            TabView {
-            Social ()
+        TabView {
+            Social()
                 .tabItem {
-                    Label("Social", systemImage:"person.bubble.fill")
+                    Label("Social", systemImage: "person.bubble.fill")
                 }
-            Reports ()
+            Reports()
                 .tabItem {
-                    Label("Reports", systemImage:"chart.xyaxis.line")
+                    Label("Reports", systemImage: "chart.xyaxis.line")
                 }
-            Expenses ()
+            ExpensesView()
                 .tabItem {
-                    Label ("Expenses", systemImage: "square.and.arrow.up")
+                    Label("Expenses", systemImage: "square.and.arrow.up")
                 }
-            Settings ()
+            Settings()
                 .tabItem {
-                    Label ("Settings", systemImage: "gearshape.fill")
+                    Label("Settings", systemImage: "gearshape.fill")
                 }
-         }
+        }
     }
 }
 
@@ -35,4 +35,3 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
-
