@@ -10,4 +10,5 @@
 >* [Canva簡報](https://www.canva.com/design/DAGCpx2Suro/DiBiVfDzfYLYGyepdfdbAw/edit?utm_content=DAGCpx2Suro&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 ## 補充資料
 >* [其中審查影片](https://youtu.be/cavWuZsghmY?si=kT2qFAXa3PPvJqYN)
+>* [Swift Standard Library](https://developer.apple.com/documentation/swift/swift-standard-library) 
 
