@@ -5,6 +5,7 @@
 ## 發想：記帳真的有阻止荷包縮水嗎？
 > * 問卷調查
 >   + 有超過一半的大學生有記帳的習慣
+>   + 記帳完有改變消費習慣嗎
 >   <img src="https://github.com/shihjonathan0302/project-moneycat/blob/main/問卷調查結果/IMG_7608.JPG" width="350"/>
 >   + 記帳完有改變消費習慣嗎
 >   
