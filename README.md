@@ -5,7 +5,9 @@
 ## 發想：記帳真的有阻止荷包縮水嗎？
 >* 問卷調查
 >   +[有超過一半的大學生有記帳的習慣]
->    !(問卷調查結果/IMG_7608.JPG) 
+>    !(問卷調查結果/IMG_7608.JPG)
+>   + 有超過一半的大學生有記帳的習慣
+>   ![Ideashare DB Structure](https://github.com/shihjonathan0302/DB/blob/main/截圖%202023-11-05%20上午2.08.12.png)
 ## 設計特色
 ## 介面設計
 >* [Figma介面設計](https://www.figma.com/file/6eZORy6rDBF882oA52Zl6q/Untitled?type=design&node-id=0%3A1&mode=design&t=n809OlLlfxIa3eUs-1)
