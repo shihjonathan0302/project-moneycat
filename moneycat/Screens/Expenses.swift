@@ -1,13 +1,7 @@
-//
-//  Expenses.swift
-//  moneycat
-//
-//  Created by Jonathan Shih on 2024/5/23.
-//
-
 import SwiftUI
 import RealmSwift
 
+// Define the Expense model
 class Expense: Object, Identifiable {
     @objc dynamic var id = UUID().uuidString
     @objc dynamic var amount = 0.0
@@ -21,23 +15,22 @@ class Expense: Object, Identifiable {
     }
 }
 
+// View model to handle expenses
 class ExpensesViewModel: ObservableObject {
     private var realm: Realm
     @Published var expenses: Results<Expense>
-    @Published var expenseAmounts: [Double] = []
 
     init() {
         do {
             realm = try Realm()
             expenses = realm.objects(Expense.self)
-            calculateExpenseAmounts()
         } catch {
             fatalError("Failed to open Realm: \(error)")
         }
     }
 
-    private func calculateExpenseAmounts() {
-        expenseAmounts = expenses.map { $0.amount }
+    var expenseAmounts: [Double] {
+        expenses.map { $0.amount }
     }
 
     var totalExpenses: Double {
@@ -45,6 +38,7 @@ class ExpensesViewModel: ObservableObject {
     }
 }
 
+// Main view showing expenses
 struct ExpensesView: View {
     @StateObject private var viewModel = ExpensesViewModel()
 
@@ -57,7 +51,7 @@ struct ExpensesView: View {
                     Image(systemName: "plus.circle")
                         .font(.system(size: 45))
                         .padding()
-                        .foregroundColor(.blue) // Changed to blue for better visibility
+                        .foregroundColor(.blue)
                 }
                 .buttonStyle(PlainButtonStyle())
             }
@@ -66,6 +60,15 @@ struct ExpensesView: View {
     }
 }
 
+// Placeholder for Add view (replace with actual implementation)
+struct Adding: View {
+    var body: some View {
+        Text("Add View")
+            .navigationTitle("Add Expense")
+    }
+}
+
+// Simple bar chart view
 struct BarChart: View {
     let data: [Double]
 
@@ -83,9 +86,11 @@ struct BarChart: View {
     }
 }
 
+// Preview provider with mock data
 struct Expenses_Previews: PreviewProvider {
     static var previews: some View {
-        let sampleData: [Double] = [100, 200, 150, 300]
-        return ExpensesView().environmentObject(ExpensesViewModel())
+        let viewModel = ExpensesViewModel() // Initialize with actual data for preview
+        return ExpensesView()
+            .environmentObject(viewModel)
     }
 }
