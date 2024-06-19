@@ -12,7 +12,7 @@
 >  
 >   <img src="https://github.com/shihjonathan0302/project-moneycat/blob/main/問卷調查結果/IMG_7609.JPG" width="350"/>
 ## 市場調查
-### 現有的記帳APP的優缺點
+> ### 現有的記帳APP的優缺點
 >   
 >   <img src="https://github.com/shihjonathan0302/project-moneycat/blob/main/問卷調查結果/截圖%202024-06-19%20下午5.04.19.png" width="350"/>
 ## 設計特色
