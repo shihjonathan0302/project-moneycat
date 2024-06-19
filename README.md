@@ -4,14 +4,19 @@
 >* 指導教授: 林坤誼老師
 ## 發想：記帳真的有阻止荷包縮水嗎？
 > ### 問卷調查
->* 有超過一半的大學生有記帳的習慣
-> 
->   <img src="https://github.com/shihjonathan0302/project-moneycat/blob/main/問卷調查結果/IMG_7608.JPG" width="350"/>
->
->* 就算有記帳習慣，還是有接近一半的人認為記帳並沒有改變他們的消費習慣
->  
->   <img src="https://github.com/shihjonathan0302/project-moneycat/blob/main/問卷調查結果/IMG_7609.JPG" width="350"/>
-## 市場調查
+<div style="display: flex; justify-content: space-around;">
+  <div>
+    超過一半的大學生有記帳的習慣  
+    <br>
+    <img src="https://github.com/shihjonathan0302/project-moneycat/blob/main/問卷調查結果/IMG_7608.JPG" width="350"/>
+  </div>
+  <div>
+    就算有記帳習慣，還是有接近一半的人認為記帳並沒有改變他們的消費習慣  
+    <br>
+    <img src="https://github.com/shihjonathan0302/project-moneycat/blob/main/問卷調查結果/IMG_7609.JPG" width="350"/>
+  </div>
+</div>
+
 > ### 現有的記帳APP的優缺點
 >   
 >   <img src="https://github.com/shihjonathan0302/project-moneycat/blob/main/問卷調查結果/截圖%202024-06-19%20下午5.04.19.png" width="350"/>
