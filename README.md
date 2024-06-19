@@ -9,6 +9,8 @@
 >
 >   + 就算有記帳習慣，還是有接近一半的人認為記帳並沒有改變他們的消費習慣
 >   <img src="https://github.com/shihjonathan0302/project-moneycat/blob/main/問卷調查結果/IMG_7609.JPG" width="350"/>
+## 市場調查
+> * 現有的記帳APP的優缺點
 ## 設計特色
 ## 介面設計
 >* [Figma介面設計](https://www.figma.com/file/6eZORy6rDBF882oA52Zl6q/Untitled?type=design&node-id=0%3A1&mode=design&t=n809OlLlfxIa3eUs-1)
