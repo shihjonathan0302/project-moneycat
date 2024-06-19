@@ -7,7 +7,9 @@
 >   + 有超過一半的大學生有記帳的習慣
 >   <img src="https://github.com/shihjonathan0302/project-moneycat/blob/main/問卷調查結果/IMG_7608.JPG" width="350"/>
 >
->   + 記帳完有改變消費習慣嗎
+>   + 就算有記帳習慣，還是有接近一半的人認為記帳並沒有改變他們的消費習慣
+>   <img width="684" alt="image" src="https://github.com/shihjonathan0302/project-moneycat/assets/113406657/ff8546b5-9c94-46c7-88a1-a18a320fcb10">
+
 >   <img src="https://github.com/shihjonathan0302/project-moneycat/blob/main/問卷調查結果/IMG_7609.JPG" width="350"/>
 ## 設計特色
 ## 介面設計
