@@ -8,7 +8,7 @@
 >   <img src="https://github.com/shihjonathan0302/project-moneycat/blob/main/問卷調查結果/IMG_7608.JPG" width="350"/>
 >
 >   + 記帳完有改變消費習慣嗎
->   <img src="" width="350"/>
+>   <img src="https://github.com/shihjonathan0302/project-moneycat/blob/main/問卷調查結果/IMG_7609.JPG" width="350"/>
 ## 設計特色
 ## 介面設計
 >* [Figma介面設計](https://www.figma.com/file/6eZORy6rDBF882oA52Zl6q/Untitled?type=design&node-id=0%3A1&mode=design&t=n809OlLlfxIa3eUs-1)
