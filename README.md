@@ -1,4 +1,4 @@
-<img width="1093" alt="image" src="https://github.com/shihjonathan0302/project-moneycat/assets/113406657/a43e852c-7d75-4c7f-b08b-d37a9c579b26"># Moneycat校園記帳App
+# Moneycat校園記帳App
 >* 姓名: [施宏儒](https://shihjonathan0302.github.io/Web/web1/)、羅浚佑、黃鈺娟
 >* 系級: [科技系3年級](https://www.tahrd.ntnu.edu.tw)
 >* 指導教授: 林坤誼老師
