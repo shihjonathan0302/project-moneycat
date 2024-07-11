@@ -9,37 +9,26 @@ import SwiftUI
 import UIKit
 import RealmSwift
 
-class ExpenseObject: Object {
-    @Persisted var amount: Double = 0.0
-    @Persisted var category: String = ""
-    @Persisted var recurrence: String = ""
-    @Persisted var date: Date = Date()
-    @Persisted var note: String = ""
-}
-
 struct Add: View {
-    let realm = try! Realm()
+    @EnvironmentObject var viewModel: ExpensesViewModel
     
     @State private var amount = ""
     @State private var recurrence = Recurrence.none
     @State private var date = Date()
     @State private var note = ""
-    @State private var category = "groceries"
+    @State private var category = Category.groceries
     
     func handleCreate() {
-            let expense = ExpenseObject()
-            expense.amount = Double(amount) ?? 0.0
-            expense.category = category
-            expense.recurrence = recurrence.rawValue
-            expense.date = date
-            expense.note = note
+        viewModel.addExpense(
+            amount: Double(amount) ?? 0.0,
+            category: category,
+            recurrence: recurrence.rawValue,
+            date: date,
+            note: note
+        )
                 
-            try! realm.write {
-                    realm.add(expense)
-                }
-                
-            amount = ""
-            note = ""
+        amount = ""
+        note = ""
         
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
@@ -74,10 +63,10 @@ struct Add: View {
                         Text("Categories")
                         Spacer()
                         Picker(selection: $category, label: Text(""), content: {
-                            Text("Groceries").tag("groceries")
-                            Text("Bills").tag("bills")
-                            Text("Subscriptions").tag("subscriptions")
-                            Text("Gas").tag("gas")
+                            Text("Groceries").tag(Category.groceries)
+                            Text("Bills").tag(Category.bills)
+                            Text("Subscriptions").tag(Category.subscriptions)
+                            Text("Gas").tag(Category.gas)
                         })
                     }
                     
@@ -111,11 +100,9 @@ struct Add: View {
                             .multilineTextAlignment(.trailing)
                             .submitLabel(.done)
                     }
-                    
-                   
                 }
                 .frame(maxWidth: .infinity)
-                .scrollDisabled (true)
+                .scrollDisabled(true)
                 .frame(height: 300)
                 
                 Button(action: {
@@ -138,18 +125,18 @@ struct Add: View {
                     Button(action: {
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     }) {
-                        Label("Dismiss", systemImage: "keyboard chevron.compact.down")
+                        Label("Dismiss", systemImage: "keyboard.chevron.compact.down")
                     }
                 }
             }
             .padding(.top, -10)
-            }
         }
-    }
-    
-struct Add_Previews: PreviewProvider {
-    static var previews: some View {
-        Add()
     }
 }
 
+struct Add_Previews: PreviewProvider {
+    static var previews: some View {
+        Add()
+            .environmentObject(ExpensesViewModel())
+    }
+}

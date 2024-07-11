@@ -86,13 +86,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		FA192E542C009FFC009CBD31 /* Charts */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Charts;
-			sourceTree = "<group>";
-		};
 		FA5C53C42BDBBD0400C4AF6C /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -162,7 +155,6 @@
 		FA85DBEE2BBDCF7E00533BCA /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				FA192E542C009FFC009CBD31 /* Charts */,
 				FA5C53C72BDBBED800C4AF6C /* TotalCurrencyBox.swift */,
 				FA192E572C00A0A7009CBD31 /* ExpensesList.swift */,
 			);

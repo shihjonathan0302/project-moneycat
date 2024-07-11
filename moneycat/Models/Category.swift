@@ -27,4 +27,10 @@ class Category: Object, ObjectKeyIdentifiable {
         self.name = name
         self._color = color.persistableValue
     }
+
+    // Predefined categories
+    static let groceries = Category(name: "Groceries", color: .green)
+    static let bills = Category(name: "Bills", color: .red)
+    static let subscriptions = Category(name: "Subscriptions", color: .blue)
+    static let gas = Category(name: "Gas", color: .yellow)
 }

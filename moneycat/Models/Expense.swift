@@ -8,60 +8,39 @@
 import SwiftUI
 import RealmSwift
 
-class MyAooExpense: Object, ObjectKeyIdentifiable {
-    @Persisted(primaryKey: true) var _id: ObjectId
-    @Persisted var amount: Double = 0.0
-    @Persisted var category: Category?
-    @Persisted var date: Date
-    @Persisted var note: String?
-    @Persisted var recurrence: Recurrence? = Recurrence.none
-    
-    convenience init(amount: Double, category: Category, date: Date, note: String? = nil, recurrence: Recurrence? = nil) {
-        self.init()
-        self.amount = amount
-        self.category = category
-        self.date = date
-        self.note = note
-        self.recurrence = recurrence
-    }
-    
-    var dayInWeek: String {
-        get {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "EEEE"
-            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-            let dayInWeek = dateFormatter.string(from: self.date)
-            return dayInWeek
+// View model to handle expenses
+class ExpensesViewModel: ObservableObject {
+    private var realm: Realm
+    @Published var expenses: Results<MyAppExpense>
+
+    init() {
+        do {
+            realm = try Realm()
+            expenses = realm.objects(MyAppExpense.self)
+        } catch {
+            fatalError("Failed to open Realm: \(error)")
         }
     }
-    
-    var dayInMonth: Int {
-        get {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd"
-            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-            let dayInMonth = Int(dateFormatter.string(from: self.date))!
-            return dayInMonth
-        }
+
+    var expenseAmounts: [Double] {
+        expenses.map { $0.amount }
     }
-    
-    var month: String {
-        get {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "MMM"
-            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-            let month = dateFormatter.string(from: self.date)
-            return month
-        }
+
+    var totalExpenses: Double {
+        expenses.reduce(0) { $0 + $1.amount }
     }
-    
-    var year: Int {
-        get {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyy"
-            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-            let year = Int(dateFormatter.string(from: self.date))!
-            return year
+
+    func addExpense(amount: Double, category: Category, recurrence: String, date: Date, note: String) {
+        let expense = MyAppExpense(amount: amount, category: category, date: date, note: note, recurrence: Recurrence(rawValue: recurrence))
+        
+        do {
+            try realm.write {
+                realm.add(expense)
+            }
+            // Trigger the @Published property to update views
+            expenses = realm.objects(MyAppExpense.self)
+        } catch {
+            print("Error adding expense: \(error)")
         }
     }
 }

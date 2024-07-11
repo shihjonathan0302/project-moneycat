@@ -18,6 +18,10 @@ struct ContentView: View {
                 .tabItem {
                     Label("Reports", systemImage: "chart.xyaxis.line")
                 }
+//            Add()
+//                .tabItem {
+//                    Label("Add", systemImage: "plus.circle")
+//                          }
             ExpensesView()
                 .tabItem {
                     Label("Expenses", systemImage: "square.and.arrow.up")
