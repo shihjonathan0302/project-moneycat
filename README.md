@@ -16,7 +16,7 @@
 ## 設計特色
 > ### 校園論壇
 > ### KANO模型分析
-
+> <img src="https://github.com/shihjonathan0302/project-moneycat/blob/main/問卷調查結果/圖片 1.png width="350"/>
 ## 介面設計
 >* [Figma介面設計](https://www.figma.com/file/6eZORy6rDBF882oA52Zl6q/Untitled?type=design&node-id=0%3A1&mode=design&t=n809OlLlfxIa3eUs-1)
 >* [Canva簡報](https://www.canva.com/design/DAGCpx2Suro/DiBiVfDzfYLYGyepdfdbAw/edit?utm_content=DAGCpx2Suro&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
