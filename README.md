@@ -1,4 +1,4 @@
-# Moneycat校園記帳App
+<img width="1093" alt="image" src="https://github.com/shihjonathan0302/project-moneycat/assets/113406657/a43e852c-7d75-4c7f-b08b-d37a9c579b26"># Moneycat校園記帳App
 >* 姓名: [施宏儒](https://shihjonathan0302.github.io/Web/web1/)、羅浚佑、黃鈺娟
 >* 系級: [科技系3年級](https://www.tahrd.ntnu.edu.tw)
 >* 指導教授: 林坤誼老師
@@ -17,6 +17,9 @@
 > ### 校園論壇
 > ### KANO模型分析
 > <img src="https://github.com/shihjonathan0302/project-moneycat/blob/main/問卷調查結果/圖片%201.png" width="350"/>
+>  +基本型需求：顧客對這些功能有明確的期望，缺乏它們將使產品被視為不完整或不可接受
+>  +期望型需求：這些功能使顧客滿意，但缺乏它們不會導致顧客對產品的不滿
+>  +興奮型需求：超越顧客期望的功能，提高顧客對產品的滿意度和忠誠度
 ## 介面設計
 >* [Figma介面設計](https://www.figma.com/file/6eZORy6rDBF882oA52Zl6q/Untitled?type=design&node-id=0%3A1&mode=design&t=n809OlLlfxIa3eUs-1)
 >* [Canva簡報](https://www.canva.com/design/DAGCpx2Suro/DiBiVfDzfYLYGyepdfdbAw/edit?utm_content=DAGCpx2Suro&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
