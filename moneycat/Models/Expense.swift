@@ -23,16 +23,16 @@ class ExpensesViewModel: ObservableObject {
     }
 
     var expenseAmounts: [Double] {
-        expenses.map { $0.amount }
+        return expenses.map { $0.amount }
     }
 
     var totalExpenses: Double {
-        expenses.reduce(0) { $0 + $1.amount }
+        return expenses.reduce(0) { $0 + $1.amount }
     }
 
     func addExpense(amount: Double, category: Category, recurrence: String, date: Date, note: String) {
         let expense = MyAppExpense(amount: amount, category: category, date: date, note: note, recurrence: Recurrence(rawValue: recurrence))
-        
+
         do {
             try realm.write {
                 realm.add(expense)

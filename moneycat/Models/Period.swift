@@ -6,7 +6,7 @@
 //
 
 import Foundation
-//import RealmSwift
+import RealmSwift
 
 enum Period: String, CaseIterable {
     case day = "Day"

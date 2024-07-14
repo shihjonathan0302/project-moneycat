@@ -14,12 +14,10 @@ class Category: Object, ObjectKeyIdentifiable {
     @Persisted var name: String
     
     var color: Color {
-        get {
-            if self._color == nil {
-                return Color.clear
-            }
-            return Color(persistedValue: self._color!)
+        if let color = self._color {
+            return Color(persistedValue: color)
         }
+        return Color.clear
     }
     
     convenience init(name: String, color: Color) {

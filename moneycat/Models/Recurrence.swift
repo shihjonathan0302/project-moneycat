@@ -12,6 +12,6 @@ enum Recurrence: String, PersistableEnum, CaseIterable {
     case none = "None"
     case daily = "Daily"
     case weekly = "Weekly"
-    case monthly = "Monthy"
+    case monthly = "Monthly"  
     case yearly = "Yearly"
 }

@@ -16,9 +16,11 @@ struct Add: View {
     @State private var recurrence = Recurrence.none
     @State private var date = Date()
     @State private var note = ""
-    @State private var category = Category.groceries
+    @State private var selectedCategory: Category?
     
     func handleCreate() {
+        guard let category = selectedCategory else { return }
+        
         viewModel.addExpense(
             amount: Double(amount) ?? 0.0,
             category: category,
@@ -33,12 +35,6 @@ struct Add: View {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
     
-    var dateClosedRange: ClosedRange<Date> {
-        let min = Calendar.current.date(byAdding:.year, value: -1, to: Date())!
-        let max = Date()
-        return min...max
-    }
-    
     let dateClosingRange: ClosedRange<Date> = {
         let calendar = Calendar.current
         let currentDate = Date()
@@ -50,72 +46,21 @@ struct Add: View {
         NavigationView {
             VStack {
                 List {
-                    HStack {
-                        Text("Amount")
-                        Spacer()
-                        TextField("Amount", text: $amount)
-                            .multilineTextAlignment(.trailing)
-                            .submitLabel(.done)
-                            .keyboardType(.numberPad)
-                    }
+                    AmountTextField(amount: $amount)
                     
-                    HStack {
-                        Text("Categories")
-                        Spacer()
-                        Picker(selection: $category, label: Text(""), content: {
-                            Text("Groceries").tag(Category.groceries)
-                            Text("Bills").tag(Category.bills)
-                            Text("Subscriptions").tag(Category.subscriptions)
-                            Text("Gas").tag(Category.gas)
-                        })
-                    }
+                    CategoryPicker(selectedCategory: $selectedCategory)
                     
-                    HStack {
-                        Text("Recurrence")
-                        Spacer()
-                        Picker(selection: $recurrence, label: Text(""), content: {
-                            Text("None").tag(Recurrence.none)
-                            Text("Daily").tag(Recurrence.daily)
-                            Text("Weekly").tag(Recurrence.weekly)
-                            Text("Monthly").tag(Recurrence.monthly)
-                            Text("Yearly").tag(Recurrence.yearly)
-                        })
-                    }
+                    RecurrencePicker(recurrence: $recurrence)
                     
-                    HStack{
-                        Text("Date")
-                        Spacer()
-                        DatePicker(
-                            selection: $date,
-                            in: dateClosingRange,
-                            displayedComponents: .date,
-                            label: { Text("") }
-                        )
-                    }
+                    DatePickerRow(date: $date, dateRange: dateClosingRange)
                     
-                    HStack {
-                        Text("Note")
-                        Spacer()
-                        TextField("Note", text: $note)
-                            .multilineTextAlignment(.trailing)
-                            .submitLabel(.done)
-                    }
+                    NoteTextField(note: $note)
                 }
                 .frame(maxWidth: .infinity)
                 .scrollDisabled(true)
                 .frame(height: 300)
                 
-                Button(action: {
-                    handleCreate()
-                }) {
-                    Label("Submit Expense", systemImage: "plus")
-                        .labelStyle(.titleOnly)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 12)
-                }
-                .foregroundColor(.white)
-                .background(Color.blue)
-                .cornerRadius(10)
+                SubmitButton(action: handleCreate)
                 
                 Spacer()
             }
@@ -131,6 +76,104 @@ struct Add: View {
             }
             .padding(.top, -10)
         }
+    }
+}
+
+struct AmountTextField: View {
+    @Binding var amount: String
+    
+    var body: some View {
+        HStack {
+            Text("Amount")
+            Spacer()
+            TextField("Amount", text: $amount)
+                .multilineTextAlignment(.trailing)
+                .submitLabel(.done)
+                .keyboardType(.numberPad)
+        }
+    }
+}
+
+struct CategoryPicker: View {
+    @Binding var selectedCategory: Category?
+    
+    var body: some View {
+        HStack {
+            Text("Categories")
+            Spacer()
+            Picker(selection: $selectedCategory, label: Text("")) {
+                Text("Groceries").tag(Category.groceries)
+                Text("Bills").tag(Category.bills)
+                Text("Subscriptions").tag(Category.subscriptions)
+                Text("Gas").tag(Category.gas)
+            }
+        }
+    }
+}
+
+struct RecurrencePicker: View {
+    @Binding var recurrence: Recurrence
+    
+    var body: some View {
+        HStack {
+            Text("Recurrence")
+            Spacer()
+            Picker(selection: $recurrence, label: Text("")) {
+                Text("None").tag(Recurrence.none)
+                Text("Daily").tag(Recurrence.daily)
+                Text("Weekly").tag(Recurrence.weekly)
+                Text("Monthly").tag(Recurrence.monthly)
+                Text("Yearly").tag(Recurrence.yearly)
+            }
+        }
+    }
+}
+
+struct DatePickerRow: View {
+    @Binding var date: Date
+    let dateRange: ClosedRange<Date>
+    
+    var body: some View {
+        HStack {
+            Text("Date")
+            Spacer()
+            DatePicker(
+                selection: $date,
+                in: dateRange,
+                displayedComponents: .date,
+                label: { Text("") }
+            )
+        }
+    }
+}
+
+struct NoteTextField: View {
+    @Binding var note: String
+    
+    var body: some View {
+        HStack {
+            Text("Note")
+            Spacer()
+            TextField("Note", text: $note)
+                .multilineTextAlignment(.trailing)
+                .submitLabel(.done)
+        }
+    }
+}
+
+struct SubmitButton: View {
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Label("Submit Expense", systemImage: "plus")
+                .labelStyle(.titleOnly)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
+        }
+        .foregroundColor(.white)
+        .background(Color.blue)
+        .cornerRadius(10)
     }
 }
 

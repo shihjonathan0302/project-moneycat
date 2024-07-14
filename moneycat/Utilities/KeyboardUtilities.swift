@@ -8,6 +8,8 @@
 import Foundation
 import UIKit
 
+/// Hides the keyboard if it is currently presented.
 func hideKeyboard() {
     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
 }
+

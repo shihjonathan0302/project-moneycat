@@ -7,13 +7,6 @@
 
 import SwiftUI
 
-extension Double {
-    func roundTo(_ decimalPlaces: Int) -> Double {
-        let multiplier = pow(10.0, Double(decimalPlaces))
-        return (self * multiplier).rounded() / multiplier
-    }
-}
-
 struct TotalCurrencyBox: View {
     var amount: Double = 0
     

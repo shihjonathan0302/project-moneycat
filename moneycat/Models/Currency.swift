@@ -7,6 +7,9 @@
 
 import Foundation
 
-enum Currency:String {
-    case USD = "USD", CAD = "CAD", EUR = "EUR", MKD = "MKD"
-    }
+enum Currency: String {
+    case USD = "USD"
+    case CAD = "CAD"
+    case EUR = "EUR"
+    case MKD = "MKD"
+}

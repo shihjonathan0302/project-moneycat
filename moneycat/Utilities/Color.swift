@@ -12,19 +12,16 @@ public class PersistableColor: EmbeddedObject {
     @Persisted var red: Double = 0
     @Persisted var green: Double = 0
     @Persisted var blue: Double = 0
-    @Persisted var opacity: Double = 0
+    @Persisted var opacity: Double = 1.0
     
     convenience init(color: Color) {
         self.init()
-        if let components = color.cgColor?.components {
-            if components.count >= 3 {
-                red = components[0]
-                green = components[1]
-                blue = components[2]
-            }
-            if components.count >= 4 {
-                opacity = components[3]
-            }
+        let uiColor = UIColor(color)
+        if let components = uiColor.cgColor.components, components.count >= 3 {
+            red = Double(components[0])
+            green = Double(components[1])
+            blue = Double(components[2])
+            opacity = components.count >= 4 ? Double(components[3]) : 1.0
         }
     }
 }
@@ -32,13 +29,17 @@ public class PersistableColor: EmbeddedObject {
 extension Color: CustomPersistable {
     public typealias PersistedType = PersistableColor
     
-    public init(persistedValue: PersistableColor) { self.init(
-        .sRGB, red: persistedValue.red,
-        green: persistedValue.green,
-        blue: persistedValue.blue,
-        opacity: persistedValue.opacity) }
+    public init(persistedValue: PersistableColor) {
+        self.init(
+            .sRGB,
+            red: persistedValue.red,
+            green: persistedValue.green,
+            blue: persistedValue.blue,
+            opacity: persistedValue.opacity
+        )
+    }
     
     public var persistableValue: PersistableColor {
-        PersistableColor(color: self)
+        return PersistableColor(color: self)
     }
 }

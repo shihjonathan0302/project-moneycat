@@ -10,15 +10,11 @@ import RealmSwift
 
 class MyAppExpense: Object, ObjectKeyIdentifiable {
     @Persisted(primaryKey: true) var _id: ObjectId
-    @Persisted var amount: Double
+    @Persisted var amount: Double = 0.0
     @Persisted var category: Category?
-    @Persisted var date: Date
+    @Persisted var date: Date = Date()
     @Persisted var note: String?
     @Persisted var recurrence: Recurrence? = Recurrence.none
-    
-    convenience override init() {
-        self.init(amount: 0.0, category: nil, date: Date())
-    }
     
     convenience init(amount: Double, category: Category?, date: Date, note: String? = nil, recurrence: Recurrence? = nil) {
         self.init()
