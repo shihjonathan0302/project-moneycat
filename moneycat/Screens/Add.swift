@@ -6,180 +6,147 @@
 //
 
 import SwiftUI
-import UIKit
 import RealmSwift
+import AVKit
 
 struct Add: View {
-    @EnvironmentObject var viewModel: ExpensesViewModel
+    @EnvironmentObject var realmManager: RealmManager
     
+    @State private var selectedCategory: Category?
     @State private var amount = ""
     @State private var recurrence = Recurrence.none
     @State private var date = Date()
     @State private var note = ""
-    @State private var selectedCategory: Category?
     
-    func handleCreate() {
-        guard let category = selectedCategory else { return }
-        
-        viewModel.addExpense(
-            amount: Double(amount) ?? 0.0,
-            category: category,
-            recurrence: recurrence.rawValue,
-            date: date,
-            note: note
-        )
-                
-        amount = ""
-        note = ""
-        
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    func onAppear() {
+        if !realmManager.categories.isEmpty {
+            self.selectedCategory = realmManager.categories.first
+        }
     }
     
-    let dateClosingRange: ClosedRange<Date> = {
-        let calendar = Calendar.current
-        let currentDate = Date()
-        let futureDate = calendar.date(byAdding: .year, value: 1, to: currentDate)!
-        return currentDate...futureDate
-    }()
+    var dateClosedRange: ClosedRange<Date> {
+        let min = Calendar.current.date(byAdding: .year, value: -1, to: Date())!
+        let max = Date()
+        return min...max
+    }
+    
+    func handleCreate() {
+        guard let amount = Double(self.amount), let selectedCategory = self.selectedCategory else {
+            // Handle invalid input gracefully
+            return
+        }
+        
+        self.realmManager.submitExpense(Expense(
+            amount: amount,
+            category: selectedCategory,
+            recurrence: self.recurrence.rawValue,  // Convert Recurrence enum to its raw value
+            date: self.date,
+            note: self.note.isEmpty ? selectedCategory.name : self.note
+        ))
+        self.amount = ""
+        self.recurrence = Recurrence.none
+        self.date = Date()
+        self.note = ""
+        hideKeyboard()
+    }
     
     var body: some View {
         NavigationView {
             VStack {
                 List {
-                    AmountTextField(amount: $amount)
+                    HStack {
+                        Text("Amount")
+                        Spacer()
+                        TextField("Amount", text: $amount)
+                            .multilineTextAlignment(.trailing)
+                            .submitLabel(.done)
+                            .keyboardType(.decimalPad)
+                    }
                     
-                    CategoryPicker(selectedCategory: $selectedCategory)
+                    HStack {
+                        Text("Recurrence")
+                        Spacer()
+                        Picker(selection: $recurrence, label: Text("")) {
+                            Text("None").tag(Recurrence.none)
+                            Text("Daily").tag(Recurrence.daily)
+                            Text("Weekly").tag(Recurrence.weekly)
+                            Text("Monthly").tag(Recurrence.monthly)
+                            Text("Yearly").tag(Recurrence.yearly)
+                        }
+                    }
                     
-                    RecurrencePicker(recurrence: $recurrence)
+                    HStack {
+                        Text("Date")
+                        Spacer()
+                        DatePicker(
+                            "Select Date",
+                            selection: $date,
+                            in: dateClosedRange,
+                            displayedComponents: .date
+                        )
+                    }
                     
-                    DatePickerRow(date: $date, dateRange: dateClosingRange)
+                    HStack {
+                        Text("Note")
+                        Spacer()
+                        TextField("Note", text: $note)
+                            .multilineTextAlignment(.trailing)
+                            .submitLabel(.done)
+                    }
                     
-                    NoteTextField(note: $note)
+                    HStack {
+                        Text("Category")
+                        Spacer()
+                        Picker(selection: $selectedCategory, label: Text("")) {
+                            if !realmManager.categories.isEmpty {
+                                ForEach(realmManager.categories) { category in
+                                    Text(category.name).tag(Optional(category))
+                                }
+                            } else {
+                                Text("Create a category first").tag(Optional(selectedCategory))
+                            }
+                        }
+                    }
                 }
-                .frame(maxWidth: .infinity)
                 .scrollDisabled(true)
-                .frame(height: 300)
+                .frame(height: 275)
                 
-                SubmitButton(action: handleCreate)
+                Button(action: handleCreate) {
+                    Label("Submit expense", systemImage: "plus")
+                        .labelStyle(.titleOnly)
+                        .padding(.horizontal, 44)
+                        .padding(.vertical, 12)
+                }
+                .foregroundColor(.white)
+                .background(Color.blue)
+                .cornerRadius(10)
                 
                 Spacer()
             }
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
-                    Button(action: {
-                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                    }) {
+                    Button(action: hideKeyboard) {
                         Label("Dismiss", systemImage: "keyboard.chevron.compact.down")
                     }
                 }
             }
-            .padding(.top, -10)
+            .padding(.top, 16)
+            .navigationTitle("Add")
+        }
+        .onAppear {
+            onAppear()
         }
     }
-}
-
-struct AmountTextField: View {
-    @Binding var amount: String
     
-    var body: some View {
-        HStack {
-            Text("Amount")
-            Spacer()
-            TextField("Amount", text: $amount)
-                .multilineTextAlignment(.trailing)
-                .submitLabel(.done)
-                .keyboardType(.numberPad)
-        }
-    }
-}
-
-struct CategoryPicker: View {
-    @Binding var selectedCategory: Category?
-    
-    var body: some View {
-        HStack {
-            Text("Categories")
-            Spacer()
-            Picker(selection: $selectedCategory, label: Text("")) {
-                Text("Groceries").tag(Category.groceries)
-                Text("Bills").tag(Category.bills)
-                Text("Subscriptions").tag(Category.subscriptions)
-                Text("Gas").tag(Category.gas)
-            }
-        }
-    }
-}
-
-struct RecurrencePicker: View {
-    @Binding var recurrence: Recurrence
-    
-    var body: some View {
-        HStack {
-            Text("Recurrence")
-            Spacer()
-            Picker(selection: $recurrence, label: Text("")) {
-                Text("None").tag(Recurrence.none)
-                Text("Daily").tag(Recurrence.daily)
-                Text("Weekly").tag(Recurrence.weekly)
-                Text("Monthly").tag(Recurrence.monthly)
-                Text("Yearly").tag(Recurrence.yearly)
-            }
-        }
-    }
-}
-
-struct DatePickerRow: View {
-    @Binding var date: Date
-    let dateRange: ClosedRange<Date>
-    
-    var body: some View {
-        HStack {
-            Text("Date")
-            Spacer()
-            DatePicker(
-                selection: $date,
-                in: dateRange,
-                displayedComponents: .date,
-                label: { Text("") }
-            )
-        }
-    }
-}
-
-struct NoteTextField: View {
-    @Binding var note: String
-    
-    var body: some View {
-        HStack {
-            Text("Note")
-            Spacer()
-            TextField("Note", text: $note)
-                .multilineTextAlignment(.trailing)
-                .submitLabel(.done)
-        }
-    }
-}
-
-struct SubmitButton: View {
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            Label("Submit Expense", systemImage: "plus")
-                .labelStyle(.titleOnly)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 12)
-        }
-        .foregroundColor(.white)
-        .background(Color.blue)
-        .cornerRadius(10)
+    // Helper function to hide the keyboard
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 
 struct Add_Previews: PreviewProvider {
     static var previews: some View {
-        Add()
-            .environmentObject(ExpensesViewModel())
+        Add().environmentObject(RealmManager())
     }
 }

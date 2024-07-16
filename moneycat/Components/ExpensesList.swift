@@ -6,6 +6,22 @@
 //
 
 import SwiftUI
+import RealmSwift
+
+class Expense: Object, ObjectKeyIdentifiable {
+    @Persisted(primaryKey: true) var id: UUID = UUID()
+    @Persisted var amount: Double
+    @Persisted var category: ExpenseCategory
+    @Persisted var recurrence: String
+    @Persisted var date: Date
+    @Persisted var note: String
+}
+
+class ExpenseCategory: Object, ObjectKeyIdentifiable {
+    @Persisted(primaryKey: true) var id: UUID = UUID()
+    @Persisted var name: String
+    @Persisted var color: String
+}
 
 struct ExpensesList: View {
     var expenses: [Dictionary<String, [Expense]>.Element]
@@ -37,6 +53,7 @@ struct ExpensesList: View {
                             HStack {
                                 Text(expense.note)
                                 Spacer()
+                                Text(expense.category.name)  // Access category name
                                 Text(String(format: "%.2f", expense.amount))
                             }
                         }
@@ -47,15 +64,6 @@ struct ExpensesList: View {
     }
 }
 
-struct Expense: Identifiable {
-    var id = UUID()
-    var amount: Double
-    var category: String
-    var recurrence: String
-    var date: Date
-    var note: String
-}
-
 func parseDate(_ dateString: String) -> Date {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -64,8 +72,9 @@ func parseDate(_ dateString: String) -> Date {
 
 struct ExpensesList_Previews: PreviewProvider {
     static var previews: some View {
+        let sampleCategory = ExpenseCategory(value: ["name": "Groceries", "color": "blue"])
         let sampleExpenses: [Dictionary<String, [Expense]>.Element] = [
-            ("2023-07-12", [Expense(amount: 10.0, category: "Groceries", recurrence: "None", date: Date(), note: "Milk")])
+            ("2023-07-12", [Expense(value: ["amount": 10.0, "category": sampleCategory, "recurrence": "None", "date": Date(), "note": "Milk"])])
         ]
         return ExpensesList(expenses: sampleExpenses)
     }

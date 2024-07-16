@@ -8,67 +8,35 @@
 import SwiftUI
 import RealmSwift
 
-class Category: Object, Identifiable {
-    @Persisted(primaryKey: true) var id: ObjectId
-    @Persisted var name: String = ""
-    @Persisted var colorHex: String = ""
-
-    var color: Color {
-        get {
-            Color(hex: colorHex)
-        }
-    }
-}
-
-extension Color {
-    init(hex: String) {
-        let scanner = Scanner(string: hex)
-        scanner.currentIndex = hex.startIndex
-        var rgbValue: UInt64 = 0
-        scanner.scanHexInt64(&rgbValue)
-        let r = Double((rgbValue & 0xff0000) >> 16) / 255.0
-        let g = Double((rgbValue & 0x00ff00) >> 8) / 255.0
-        let b = Double(rgbValue & 0x0000ff) / 255.0
-        self.init(red: r, green: g, blue: b)
-    }
-
-    func toHex() -> String {
-        let components = self.cgColor?.components
-        let r = Float(components?[0] ?? 0)
-        let g = Float(components?[1] ?? 0)
-        let b = Float(components?[2] ?? 0)
-        return String(format: "%02lX%02lX%02lX", Int(r * 255), Int(g * 255), Int(b * 255))
-    }
-}
-
 struct Categories: View {
-    @ObservedResults(Category.self) var categories
+    @EnvironmentObject var realmManager: RealmManager
+    
     @State private var invalidDataAlertShowing = false
     @State private var newCategoryName: String = ""
     @State private var newCategoryColor = Color(.sRGB, red: 0.98, green: 0.9, blue: 0.2)
     
     func handleSubmit() {
         if newCategoryName.count > 0 {
-            let newCategory = Category()
-            newCategory.name = newCategoryName
-            newCategory.colorHex = newCategoryColor.toHex()
-            $categories.append(newCategory)
+            self.realmManager.submitCategory(Category(
+                name: newCategoryName,
+                color: newCategoryColor
+            ))
             newCategoryName = ""
         } else {
             invalidDataAlertShowing = true
         }
     }
     
-    func handleDelete(indexSet: IndexSet) {
-        for index in indexSet {
-            $categories.remove(at: index)
+    func handleDelete(at offsets: IndexSet) {
+        if offsets.first != nil {
+            realmManager.deleteCategory(category: realmManager.categories[offsets.first!])
         }
     }
     
     var body: some View {
         VStack {
             List {
-                ForEach(categories) { category in
+                ForEach(realmManager.categories, id: \.name) { category in
                     HStack {
                         Circle()
                             .frame(width: 12)
@@ -87,6 +55,7 @@ struct Categories: View {
                     .accessibilityLabel("")
                 
                 ZStack(alignment: .trailing) {
+
                     TextField("New category", text: $newCategoryName)
                         .textFieldStyle(.roundedBorder)
                         .submitLabel(.done)
@@ -143,6 +112,5 @@ struct Categories: View {
 struct Categories_Previews: PreviewProvider {
     static var previews: some View {
         Categories()
-            .environment(\.realmConfiguration, Realm.Configuration(inMemoryIdentifier: "Temporary"))
     }
 }
