@@ -1,5 +1,5 @@
 //
-//  Categories.swift
+//  Expenses.swift
 //  moneycat
 //
 //  Created by Jonathan Shih on 2024/4/5.

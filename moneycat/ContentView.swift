@@ -19,11 +19,10 @@ struct ContentView: View {
                 .tabItem {
                     Label("Reports", systemImage: "chart.xyaxis.line")
                 }
-            // Uncomment and provide appropriate implementation for Add view if needed
-            // Add()
-            //     .tabItem {
-            //         Label("Add", systemImage: "plus.circle")
-            //     }
+             Add()
+                 .tabItem {
+                     Label("Add", systemImage: "plus.circle")
+                 }
             Expenses(expenses: sampleExpenses) // Provide the expenses argument
                 .tabItem {
                     Label("Expenses", systemImage: "square.and.arrow.up")

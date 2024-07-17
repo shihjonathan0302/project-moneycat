@@ -1,10 +1,3 @@
-//
-//  RealmManager.swift
-//  moneycat
-//
-//  Created by Jonathan Shih on 2024/7/16.
-//
-
 import Foundation
 import RealmSwift
 
@@ -22,25 +15,25 @@ class RealmManager: ObservableObject {
     
     func openRealm() {
         do {
-            let config = Realm.Configuration(schemaVersion: 1)
+            let config = Realm.Configuration(schemaVersion: 1, migrationBlock: { migration, oldSchemaVersion in
+                if oldSchemaVersion < 1 {
+                    // Perform any necessary migrations here
+                }
+            })
             
             Realm.Configuration.defaultConfiguration = config
-            
             localRealm = try Realm()
         } catch {
             print("Error opening Realm", error)
         }
     }
+
     
     func loadExpenses() {
         if let localRealm = localRealm {
             let allExpenses = localRealm.objects(Expense.self).sorted(byKeyPath: "date")
             
-            expenses = []
-            
-            allExpenses.forEach { expense in
-                expenses.append(expense)
-            }
+            expenses = Array(allExpenses)
         }
     }
     
@@ -63,11 +56,7 @@ class RealmManager: ObservableObject {
         if let localRealm = localRealm {
             let allCategories = localRealm.objects(ExpenseCategory.self)
             
-            categories = []
-            
-            allCategories.forEach { category in
-                categories.append(category)
-            }
+            categories = Array(allCategories)
         }
     }
     

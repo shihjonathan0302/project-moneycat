@@ -17,10 +17,10 @@ struct Categories: View {
     
     func handleSubmit() {
         if newCategoryName.count > 0 {
-            self.realmManager.submitCategory(Category(
-                name: newCategoryName,
-                color: newCategoryColor
-            ))
+            let newCategory = ExpenseCategory()
+            newCategory.name = newCategoryName
+            newCategory.color = newCategoryColor.description // Convert Color to String
+            self.realmManager.submitCategory(newCategory)
             newCategoryName = ""
         } else {
             invalidDataAlertShowing = true
@@ -28,19 +28,19 @@ struct Categories: View {
     }
     
     func handleDelete(at offsets: IndexSet) {
-        if offsets.first != nil {
-            realmManager.deleteCategory(category: realmManager.categories[offsets.first!])
+        if let index = offsets.first {
+            realmManager.deleteCategory(category: realmManager.categories[index])
         }
     }
     
     var body: some View {
         VStack {
             List {
-                ForEach(realmManager.categories, id: \.name) { category in
+                ForEach(realmManager.categories, id: \.id) { category in
                     HStack {
                         Circle()
                             .frame(width: 12)
-                            .foregroundColor(category.color)
+                            .foregroundColor(Color(category.color)) // Convert String to Color
                         Text(category.name)
                     }
                 }
@@ -55,7 +55,6 @@ struct Categories: View {
                     .accessibilityLabel("")
                 
                 ZStack(alignment: .trailing) {
-
                     TextField("New category", text: $newCategoryName)
                         .textFieldStyle(.roundedBorder)
                         .submitLabel(.done)
@@ -111,6 +110,6 @@ struct Categories: View {
 
 struct Categories_Previews: PreviewProvider {
     static var previews: some View {
-        Categories()
+        Categories().environmentObject(RealmManager())
     }
 }

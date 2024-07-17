@@ -11,11 +11,12 @@ import RealmSwift
 class Expense: Object, ObjectKeyIdentifiable {
     @Persisted(primaryKey: true) var id: UUID = UUID()
     @Persisted var amount: Double
-    @Persisted var category: ExpenseCategory
+    @Persisted var category: ExpenseCategory?  // Marked as optional
     @Persisted var recurrence: String
     @Persisted var date: Date
     @Persisted var note: String
 }
+
 
 class ExpenseCategory: Object, ObjectKeyIdentifiable {
     @Persisted(primaryKey: true) var id: UUID = UUID()
@@ -53,7 +54,7 @@ struct ExpensesList: View {
                             HStack {
                                 Text(expense.note)
                                 Spacer()
-                                Text(expense.category.name)  // Access category name
+                                Text(expense.category?.name ?? "No Category")  // Handle optional category
                                 Text(String(format: "%.2f", expense.amount))
                             }
                         }

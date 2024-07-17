@@ -1,10 +1,3 @@
-//
-//  Add.swift
-//  moneycat
-//
-//  Created by Jonathan Shih on 2024/4/19.
-//
-
 import SwiftUI
 import RealmSwift
 import AVKit
@@ -12,7 +5,7 @@ import AVKit
 struct Add: View {
     @EnvironmentObject var realmManager: RealmManager
     
-    @State private var selectedCategory: Category?
+    @State private var selectedCategory: ExpenseCategory?
     @State private var amount = ""
     @State private var recurrence = Recurrence.none
     @State private var date = Date()
@@ -36,13 +29,14 @@ struct Add: View {
             return
         }
         
-        self.realmManager.submitExpense(Expense(
-            amount: amount,
-            category: selectedCategory,
-            recurrence: self.recurrence.rawValue,  // Convert Recurrence enum to its raw value
-            date: self.date,
-            note: self.note.isEmpty ? selectedCategory.name : self.note
-        ))
+        let newExpense = Expense()
+        newExpense.amount = amount
+        newExpense.category = selectedCategory
+        newExpense.recurrence = self.recurrence.rawValue
+        newExpense.date = self.date
+        newExpense.note = self.note.isEmpty ? selectedCategory.name : self.note
+        
+        self.realmManager.submitExpense(newExpense)
         self.amount = ""
         self.recurrence = Recurrence.none
         self.date = Date()
