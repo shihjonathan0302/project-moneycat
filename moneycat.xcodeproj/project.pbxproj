@@ -133,8 +133,8 @@
 				FA85DBEE2BBDCF7E00533BCA /* Components */,
 				FA85DBED2BBDCF5100533BCA /* Screens */,
 				FA7301892BB1CA5D00EC8520 /* AppDelegate.swift */,
-				FA73018D2BB1CA5D00EC8520 /* ContentView.swift */,
 				FA73018B2BB1CA5D00EC8520 /* SceneDelegate.swift */,
+				FA73018D2BB1CA5D00EC8520 /* ContentView.swift */,
 				FA7301922BB1CA5F00EC8520 /* Assets.xcassets */,
 			);
 			path = moneycat;

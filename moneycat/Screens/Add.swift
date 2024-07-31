@@ -10,6 +10,7 @@ struct Add: View {
     @State private var recurrence = Recurrence.none
     @State private var date = Date()
     @State private var note = ""
+    @State private var isNeed = true  // Default to "Need"
     
     func onAppear() {
         if !realmManager.categories.isEmpty {
@@ -35,12 +36,14 @@ struct Add: View {
         newExpense.recurrence = self.recurrence.rawValue
         newExpense.date = self.date
         newExpense.note = self.note.isEmpty ? selectedCategory.name : self.note
+        newExpense.isNeed = self.isNeed
         
         self.realmManager.submitExpense(newExpense)
         self.amount = ""
         self.recurrence = Recurrence.none
         self.date = Date()
         self.note = ""
+        self.isNeed = true  // Reset to default
         hideKeyboard()
     }
     
@@ -101,9 +104,19 @@ struct Add: View {
                             }
                         }
                     }
+                    
+                    HStack {
+                        Text("Type")
+                        Spacer()
+                        Picker(selection: $isNeed, label: Text("")) {
+                            Text("Need").tag(true)
+                            Text("Want").tag(false)
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                    }
                 }
                 .scrollDisabled(true)
-                .frame(height: 275)
+                .frame(height: 325)  // Adjust height to fit the new row
                 
                 Button(action: handleCreate) {
                     Label("Submit expense", systemImage: "plus")

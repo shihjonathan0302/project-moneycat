@@ -13,13 +13,12 @@ struct Categories: View {
     
     @State private var invalidDataAlertShowing = false
     @State private var newCategoryName: String = ""
-    @State private var newCategoryColor = Color(.sRGB, red: 0.98, green: 0.9, blue: 0.2)
     
     func handleSubmit() {
         if newCategoryName.count > 0 {
             let newCategory = ExpenseCategory()
             newCategory.name = newCategoryName
-            newCategory.color = newCategoryColor.description // Convert Color to String
+            newCategory.color = randomColor().description  // Assign a random color
             self.realmManager.submitCategory(newCategory)
             newCategoryName = ""
         } else {
@@ -39,8 +38,8 @@ struct Categories: View {
                 ForEach(realmManager.categories, id: \.id) { category in
                     HStack {
                         Circle()
-                            .frame(width: 12)
-                            .foregroundColor(Color(category.color)) // Convert String to Color
+                            .frame(width: 12, height: 12)
+                            .foregroundColor(Color(category.color))  // Convert String to Color
                         Text(category.name)
                     }
                 }
@@ -50,10 +49,6 @@ struct Categories: View {
             Spacer()
             
             HStack(spacing: 16) {
-                ColorPicker("", selection: $newCategoryColor, supportsOpacity: false)
-                    .labelsHidden()
-                    .accessibilityLabel("")
-                
                 ZStack(alignment: .trailing) {
                     TextField("New category", text: $newCategoryName)
                         .textFieldStyle(.roundedBorder)
@@ -106,10 +101,20 @@ struct Categories: View {
             }
         }
     }
+    
+    func randomColor() -> Color {
+        return Color(
+            red: Double.random(in: 0...1),
+            green: Double.random(in: 0...1),
+            blue: Double.random(in: 0...1)
+        )
+    }
 }
 
 struct Categories_Previews: PreviewProvider {
     static var previews: some View {
-        Categories().environmentObject(RealmManager())
+        let realmManager = RealmManager()
+        Categories()
+            .environmentObject(realmManager)
     }
 }

@@ -34,13 +34,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
-//import Sentry
-//
-//func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-//    SentrySDK.start { options in
-//        options.dsn = "YOUR_DSN_URL"
-//    }
-//    return true
-//}
-//
 

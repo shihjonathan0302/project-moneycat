@@ -1,14 +1,9 @@
-//
-//  ContentView.swift
-//  moneycat
-//
-//  Created by Jonathan Shih on 2024/3/25.
-//
-
 import SwiftUI
 import RealmSwift
 
 struct ContentView: View {
+    @EnvironmentObject var realmManager: RealmManager
+
     var body: some View {
         TabView {
             Social()
@@ -19,11 +14,11 @@ struct ContentView: View {
                 .tabItem {
                     Label("Reports", systemImage: "chart.xyaxis.line")
                 }
-             Add()
-                 .tabItem {
-                     Label("Add", systemImage: "plus.circle")
-                 }
-            Expenses(expenses: sampleExpenses) // Provide the expenses argument
+            Add()
+                .tabItem {
+                    Label("Add", systemImage: "plus.circle")
+                }
+            Expenses(expenses: realmManager.expenses)
                 .tabItem {
                     Label("Expenses", systemImage: "square.and.arrow.up")
                 }
@@ -37,14 +32,8 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
+        let realmManager = RealmManager()
         ContentView()
-            .environmentObject(RealmManager()) // Add this if RealmManager is needed
+            .environmentObject(realmManager)
     }
 }
-
-// Sample data for testing
-let sampleCategory = ExpenseCategory(value: ["name": "Groceries", "color": "blue"])
-let sampleExpenses: [Expense] = [
-    Expense(value: ["amount": 10.0, "category": sampleCategory, "recurrence": "None", "date": Date(), "note": "Milk"]),
-    Expense(value: ["amount": 20.0, "category": sampleCategory, "recurrence": "None", "date": Date(), "note": "Bread"])
-]

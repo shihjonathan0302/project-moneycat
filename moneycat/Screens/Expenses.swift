@@ -116,6 +116,8 @@ extension Double {
 
 struct Expenses_Previews: PreviewProvider {
     static var previews: some View {
-        Expenses(expenses: RealmManager().expenses)
+        let realmManager = RealmManager()
+        Expenses(expenses: realmManager.expenses)
+            .environmentObject(realmManager)
     }
 }

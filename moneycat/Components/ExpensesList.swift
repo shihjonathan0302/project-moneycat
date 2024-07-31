@@ -1,10 +1,3 @@
-//
-//  ExpensesList.swift
-//  moneycat
-//
-//  Created by Jonathan Shih on 2024/5/24.
-//
-
 import SwiftUI
 import RealmSwift
 
@@ -15,13 +8,48 @@ class Expense: Object, ObjectKeyIdentifiable {
     @Persisted var recurrence: String
     @Persisted var date: Date
     @Persisted var note: String
+    @Persisted var isNeed: Bool  // New property to indicate if the expense is a need
+    
 }
-
 
 class ExpenseCategory: Object, ObjectKeyIdentifiable {
     @Persisted(primaryKey: true) var id: UUID = UUID()
     @Persisted var name: String
-    @Persisted var color: String
+    @Persisted var color: String  // Save the color as a String
+
+    var uiColor: UIColor {
+        UIColor(hexString: color)
+    }
+
+    var swiftUIColor: Color {
+        Color(uiColor: uiColor)
+    }
+}
+
+extension UIColor {
+    convenience init(hexString: String) {
+        let scanner = Scanner(string: hexString)
+        var rgbValue: UInt64 = 0
+        scanner.scanHexInt64(&rgbValue)
+        let r = (rgbValue & 0xff0000) >> 16
+        let g = (rgbValue & 0xff00) >> 8
+        let b = rgbValue & 0xff
+        self.init(
+            red: CGFloat(r) / 0xff,
+            green: CGFloat(g) / 0xff,
+            blue: CGFloat(b) / 0xff, alpha: 1
+        )
+    }
+
+    func toHexString() -> String {
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+        getRed(&r, green: &g, blue: &b, alpha: &a)
+        let rgb: Int = (Int)(r*255)<<16 | (Int)(g*255)<<8 | (Int)(b*255)<<0
+        return String(format: "#%06x", rgb)
+    }
 }
 
 struct ExpensesList: View {
@@ -73,7 +101,7 @@ func parseDate(_ dateString: String) -> Date {
 
 struct ExpensesList_Previews: PreviewProvider {
     static var previews: some View {
-        let sampleCategory = ExpenseCategory(value: ["name": "Groceries", "color": "blue"])
+        let sampleCategory = ExpenseCategory(value: ["name": "Groceries", "color": "#0000FF"])
         let sampleExpenses: [Dictionary<String, [Expense]>.Element] = [
             ("2023-07-12", [Expense(value: ["amount": 10.0, "category": sampleCategory, "recurrence": "None", "date": Date(), "note": "Milk"])])
         ]

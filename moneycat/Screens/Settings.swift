@@ -37,6 +37,9 @@ struct Settings: View {
 
 struct Settings_Previews: PreviewProvider {
     static var previews: some View {
-        Settings ()
+        let realmManager = RealmManager()
+        Settings()
+            .environmentObject(realmManager)
     }
 }
+
