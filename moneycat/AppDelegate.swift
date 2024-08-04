@@ -6,8 +6,20 @@
 //
 
 import UIKit
+import SwiftUI
+struct MoneyCatApp: App {
+    @StateObject private var realmManager = RealmManager()
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+                .environmentObject(realmManager)
+        }
+    }
+}
 
 @main
+
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 

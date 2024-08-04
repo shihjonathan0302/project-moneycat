@@ -1,6 +1,20 @@
+//
+//  Add.swift
+//  moneycat
+//
+//  Created by Jonathan Shih on 2024/4/5.
+//
+
 import SwiftUI
 import RealmSwift
 import AVKit
+
+enum NeedOrWant: String, CaseIterable, Identifiable {
+    case need = "Need"
+    case want = "Want"
+    
+    var id: String { self.rawValue }
+}
 
 struct Add: View {
     @EnvironmentObject var realmManager: RealmManager
@@ -10,7 +24,7 @@ struct Add: View {
     @State private var recurrence = Recurrence.none
     @State private var date = Date()
     @State private var note = ""
-    @State private var isNeed = true  // Default to "Need"
+    @State private var needOrWant: NeedOrWant = .need
     
     func onAppear() {
         if !realmManager.categories.isEmpty {
@@ -36,14 +50,14 @@ struct Add: View {
         newExpense.recurrence = self.recurrence.rawValue
         newExpense.date = self.date
         newExpense.note = self.note.isEmpty ? selectedCategory.name : self.note
-        newExpense.isNeed = self.isNeed
+        newExpense.needOrWant = self.needOrWant.rawValue
         
         self.realmManager.submitExpense(newExpense)
         self.amount = ""
         self.recurrence = Recurrence.none
         self.date = Date()
         self.note = ""
-        self.isNeed = true  // Reset to default
+        self.needOrWant = .need
         hideKeyboard()
     }
     
@@ -106,17 +120,16 @@ struct Add: View {
                     }
                     
                     HStack {
-                        Text("Type")
+                        Text("Need or Want")
                         Spacer()
-                        Picker(selection: $isNeed, label: Text("")) {
-                            Text("Need").tag(true)
-                            Text("Want").tag(false)
+                        Picker(selection: $needOrWant, label: Text("")) {
+                            Text("Need").tag(NeedOrWant.need)
+                            Text("Want").tag(NeedOrWant.want)
                         }
-                        .pickerStyle(SegmentedPickerStyle())
                     }
                 }
                 .scrollDisabled(true)
-                .frame(height: 325)  // Adjust height to fit the new row
+                .frame(height: 325)
                 
                 Button(action: handleCreate) {
                     Label("Submit expense", systemImage: "plus")
@@ -144,6 +157,7 @@ struct Add: View {
         .onAppear {
             onAppear()
         }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
     
     // Helper function to hide the keyboard

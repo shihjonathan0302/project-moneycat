@@ -18,8 +18,9 @@ struct Categories: View {
         if newCategoryName.count > 0 {
             let newCategory = ExpenseCategory()
             newCategory.name = newCategoryName
-            newCategory.color = randomColor().description  // Assign a random color
+            newCategory.color = UIColor.random().toHexString()  // Assign a random color
             self.realmManager.submitCategory(newCategory)
+            print("Submitted new category: \(newCategoryName)")
             newCategoryName = ""
         } else {
             invalidDataAlertShowing = true
@@ -39,7 +40,7 @@ struct Categories: View {
                     HStack {
                         Circle()
                             .frame(width: 12, height: 12)
-                            .foregroundColor(Color(category.color))  // Convert String to Color
+                            .foregroundColor(category.swiftUIColor)  // Convert String to Color
                         Text(category.name)
                     }
                 }
@@ -114,7 +115,9 @@ struct Categories: View {
 struct Categories_Previews: PreviewProvider {
     static var previews: some View {
         let realmManager = RealmManager()
-        Categories()
+        realmManager.addDefaultCategoriesIfNeeded(force: true)  // Force add default categories for preview
+        print("Preview: Loaded \(realmManager.categories.count) categories")
+        return Categories()
             .environmentObject(realmManager)
     }
 }

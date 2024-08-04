@@ -1,3 +1,4 @@
+
 import SwiftUI
 import RealmSwift
 
@@ -8,7 +9,7 @@ class Expense: Object, ObjectKeyIdentifiable {
     @Persisted var recurrence: String
     @Persisted var date: Date
     @Persisted var note: String
-    @Persisted var isNeed: Bool  // New property to indicate if the expense is a need
+    @Persisted var needOrWant: String
     
 }
 
@@ -26,9 +27,15 @@ class ExpenseCategory: Object, ObjectKeyIdentifiable {
     }
 }
 
+import UIKit
+
 extension UIColor {
     convenience init(hexString: String) {
         let scanner = Scanner(string: hexString)
+        // Ignore the leading '#' if present
+        if hexString.hasPrefix("#") {
+            scanner.currentIndex = scanner.string.index(after: scanner.currentIndex)
+        }
         var rgbValue: UInt64 = 0
         scanner.scanHexInt64(&rgbValue)
         let r = (rgbValue & 0xff0000) >> 16
@@ -49,6 +56,15 @@ extension UIColor {
         getRed(&r, green: &g, blue: &b, alpha: &a)
         let rgb: Int = (Int)(r*255)<<16 | (Int)(g*255)<<8 | (Int)(b*255)<<0
         return String(format: "#%06x", rgb)
+    }
+    
+    static func random() -> UIColor {
+        return UIColor(
+            red: CGFloat.random(in: 0...1),
+            green: CGFloat.random(in: 0...1),
+            blue: CGFloat.random(in: 0...1),
+            alpha: 1.0
+        )
     }
 }
 
