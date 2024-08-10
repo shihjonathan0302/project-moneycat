@@ -7,6 +7,7 @@
 
 import SwiftUI
 import RealmSwift
+import Charts
 
 struct Reports: View {
     @EnvironmentObject var realmManager: RealmManager
@@ -75,75 +76,80 @@ struct QuestionnaireView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Question 1")) {
-                    Text("Do you think this item is practically helpful for your life?")
-                    Picker("Rating", selection: $question1) {
-                        ForEach(1..<6) { score in
-                            Text("\(score)").tag(score)
-                        }
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
+                Section(header: Text("基本需求")) {
+                    QuestionView(question: "你覺得這個包包對你的生活有實際的幫助嗎？", rating: $question1)
+                    QuestionView(question: "這個包包是否滿足了你日常使用的需求？", rating: $question2)
                 }
-                Section(header: Text("Question 2")) {
-                    Text("Does this item meet your daily needs?")
-                    Picker("Rating", selection: $question2) {
-                        ForEach(1..<6) { score in
-                            Text("\(score)").tag(score)
-                        }
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
+                Section(header: Text("魅力需求")) {
+                    QuestionView(question: "你覺得買這個包包讓你感到開心嗎？", rating: $question3)
+                    QuestionView(question: "如果沒有買這個包包，你會感到遺憾嗎？", rating: $question4)
                 }
-                Section(header: Text("Question 3")) {
-                    Text("Did buying this item make you happy?")
-                    Picker("Rating", selection: $question3) {
-                        ForEach(1..<6) { score in
-                            Text("\(score)").tag(score)
-                        }
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
+                Section(header: Text("期望需求")) {
+                    QuestionView(question: "你覺得這個包包的價格是否合理？", rating: $question5)
                 }
-                Section(header: Text("Question 4")) {
-                    Text("Would you regret not buying this item?")
-                    Picker("Rating", selection: $question4) {
-                        ForEach(1..<6) { score in
-                            Text("\(score)").tag(score)
-                        }
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                }
-                Section(header: Text("Question 5")) {
-                    Text("Do you think the price of this item is reasonable?")
-                    Picker("Rating", selection: $question5) {
-                        ForEach(1..<6) { score in
-                            Text("\(score)").tag(score)
-                        }
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                }
-                Section(header: Text("Question 6")) {
-                    Text("Have you considered other brands, styles, or stores for this type of item?")
-                    Picker("Rating", selection: $question6) {
-                        ForEach(1..<6) { score in
-                            Text("\(score)").tag(score)
-                        }
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
+                Section(header: Text("無差異需求")) {
+                    QuestionView(question: "你有考慮過其他品牌、款式或店家的這類產品嗎？", rating: $question6)
                 }
             }
             .navigationTitle("Expense Analysis")
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Submit") {
-                        // Handle submission logic here
-                        // Save the ratings to the database or process them as needed
+                        // Calculate scores
+                        calculateKanoModelScores()
                     }
                 }
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
-                        // Handle cancel action
+                        // Dismiss the sheet
                     }
                 }
             }
+        }
+    }
+    
+    func calculateKanoModelScores() {
+        // Calculate Basic, Attractive, Performance, Indifferent Scores
+        let basicScore = Double(question1 + question2) / 2
+        let attractiveScore = Double(question3 + question4) / 2
+        let performanceScore = Double(question5)
+        let indifferentScore = Double(question6)
+        
+        // Calculate Better-Worse Coefficients
+        let betterCoefficient = (performanceScore + attractiveScore) / (performanceScore + attractiveScore + basicScore + indifferentScore)
+        let worseCoefficient = (-1) * (performanceScore + basicScore) / (performanceScore + attractiveScore + basicScore + indifferentScore)
+        
+        // Log the results for now (can be stored or displayed in the UI)
+        print("Basic Score: \(basicScore)")
+        print("Attractive Score: \(attractiveScore)")
+        print("Performance Score: \(performanceScore)")
+        print("Indifferent Score: \(indifferentScore)")
+        print("Better Coefficient: \(betterCoefficient)")
+        print("Worse Coefficient: \(worseCoefficient)")
+        
+        // Display the results in a chart
+        showKanoModelChart(basicScore: basicScore, attractiveScore: attractiveScore, performanceScore: performanceScore, indifferentScore: indifferentScore, betterCoefficient: betterCoefficient, worseCoefficient: worseCoefficient)
+    }
+    
+    func showKanoModelChart(basicScore: Double, attractiveScore: Double, performanceScore: Double, indifferentScore: Double, betterCoefficient: Double, worseCoefficient: Double) {
+        // Present a chart or some kind of diagram based on the calculated scores
+        // This could be a bar chart or radar chart representing the scores
+    }
+}
+
+struct QuestionView: View {
+    var question: String
+    @Binding var rating: Int
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(question)
+            Picker("Rating", selection: $rating) {
+                ForEach(1..<6) { score in
+                    Text("\(score)").tag(score)
+                }
+            }
+            .pickerStyle(SegmentedPickerStyle())
         }
     }
 }
