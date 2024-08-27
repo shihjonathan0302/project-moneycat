@@ -8,29 +8,42 @@
 import SwiftUI
 
 struct Settings: View {
+    @EnvironmentObject var realmManager: RealmManager
+    @State private var showAlert = false
+
     var body: some View {
         NavigationView {
-                List {
-                    NavigationLink {
-                        Categories()
-                    } label: {
-                        HStack {
-                            Text ("Categories")
-                        }
+            List {
+                NavigationLink {
+                    Categories()
+                } label: {
+                    HStack {
+                        Text("Categories")
                     }
-                    
-                    Text("Languages")
-                    
-                    Text("Help")
-
-                    Button(role: .destructive){
-                    } label: {
-                        Text("Erase Data")
-                    }
-                                                            
                 }
-                .navigationTitle("Settings")
-                .padding(20)
+
+                Text("Languages")
+
+                Text("Help")
+
+                Button(role: .destructive) {
+                    showAlert = true
+                } label: {
+                    Text("Erase Data")
+                }
+                .alert(isPresented: $showAlert) {
+                    Alert(
+                        title: Text("Confirm Erase Data"),
+                        message: Text("Are you sure you want to remove all the data?"),
+                        primaryButton: .destructive(Text("Erase")) {
+                            realmManager.eraseData() // Correctly call eraseData method here
+                        },
+                        secondaryButton: .cancel()
+                    )
+                }
+            }
+            .navigationTitle("Settings")
+            .padding(20)
         }
     }
 }
@@ -42,4 +55,3 @@ struct Settings_Previews: PreviewProvider {
             .environmentObject(realmManager)
     }
 }
-

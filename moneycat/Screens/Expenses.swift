@@ -5,7 +5,10 @@
 //  Created by Jonathan Shih on 2024/4/5.
 //
 
+
 import SwiftUI
+import RealmSwift
+import Charts
 
 struct Expenses: View {
     @EnvironmentObject var realmManager: RealmManager
@@ -50,6 +53,18 @@ struct Expenses: View {
                         .font(.largeTitle)
                 }
                 
+                // Bar Chart
+                Chart(filteredExpenses) { expense in
+                    BarMark(
+                        x: .value("Category", expense.category?.name ?? "No Category"),
+                        y: .value("Amount", expense.amount)
+                    )
+                    .foregroundStyle(Color(hex: expense.category?.color ?? "#000000"))
+                }
+                .frame(height: 200)
+                .padding(.horizontal)
+
+                // List of expenses
                 ExpensesList(expenses: groupExpensesByDate(filteredExpenses))
                     .id(filteredExpenses.map { $0.id }) // Ensure id conforms to Hashable
             }
@@ -119,5 +134,21 @@ struct Expenses_Previews: PreviewProvider {
         let realmManager = RealmManager()
         Expenses(expenses: realmManager.expenses)
             .environmentObject(realmManager)
+    }
+}
+
+// Extension to convert hex string to Color
+extension Color {
+    init(hex: String) {
+        let scanner = Scanner(string: hex)
+        var hexNumber: UInt64 = 0
+        if scanner.scanHexInt64(&hexNumber) {
+            let r = Double((hexNumber & 0xff0000) >> 16) / 255
+            let g = Double((hexNumber & 0x00ff00) >> 8) / 255
+            let b = Double(hexNumber & 0x0000ff) / 255
+            self.init(red: r, green: g, blue: b)
+        } else {
+            self.init(.black) // Fallback color
+        }
     }
 }

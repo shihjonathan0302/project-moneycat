@@ -2,7 +2,7 @@
 //  RealmManager.swift
 //  moneycat
 //
-//  Created by Jonathan Shih on 2024/8/4.
+//  Created by Jonathan Shih on 2024/4/5.
 //
 
 import Foundation
@@ -90,6 +90,24 @@ class RealmManager: ObservableObject {
                 }
             } catch {
                 print("Error deleting category to Realm: \(error)")
+            }
+        }
+    }
+
+    // Method to erase all data from Realm
+    func eraseData() {
+        if let localRealm = localRealm {
+            do {
+                try localRealm.write {
+                    localRealm.deleteAll()
+                }
+                // Reload data after erasing to refresh the UI
+                loadExpenses()
+                loadCategories()
+                addDefaultCategoriesIfNeeded(force: true)
+                print("All data erased from Realm")
+            } catch {
+                print("Error erasing data from Realm: \(error)")
             }
         }
     }

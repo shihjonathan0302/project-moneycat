@@ -13,18 +13,20 @@ struct Reports: View {
     @EnvironmentObject var realmManager: RealmManager
     @State private var showingQuestionnaire = false
     @State private var selectedExpense: Expense?
-    
+
     @State private var question1: Int = 3
     @State private var question2: Int = 3
     @State private var question3: Int = 3
     @State private var question4: Int = 3
     @State private var question5: Int = 3
     @State private var question6: Int = 3
-    
+
+    @State private var kanoScores: [(String, Double)] = []
+
     var wantExpenses: [Expense] {
         return realmManager.expenses.filter { $0.needOrWant == "Want" }
     }
-    
+
     var body: some View {
         NavigationView {
             VStack {
@@ -53,14 +55,52 @@ struct Reports: View {
                         }
                     }
                 }
+
+                // Display the Kano scores as a bar chart if available
+                if !kanoScores.isEmpty {
+                    Text("Kano Model Analysis")
+                        .font(.headline)
+                        .padding(.top)
+
+                    Chart(kanoScores, id: \.0) { score in
+                        BarMark(
+                            x: .value("Requirement", score.0),
+                            y: .value("Score", score.1)
+                        )
+                    }
+                    .frame(height: 200)
+                    .padding()
+                }
             }
             .navigationTitle("Reports")
             .sheet(isPresented: $showingQuestionnaire) {
                 if let selectedExpense = selectedExpense {
-                    QuestionnaireView(expense: selectedExpense, question1: $question1, question2: $question2, question3: $question3, question4: $question4, question5: $question5, question6: $question6)
+                    QuestionnaireView(expense: selectedExpense, question1: $question1, question2: $question2, question3: $question3, question4: $question4, question5: $question5, question6: $question6, onSubmit: calculateKanoModelScores)
                 }
             }
         }
+    }
+
+    private func calculateKanoModelScores() {
+        // Calculate Basic, Attractive, Performance, Indifferent Scores
+        let basicScore = Double(question1 + question2) / 2
+        let attractiveScore = Double(question3 + question4) / 2
+        let performanceScore = Double(question5)
+        let indifferentScore = Double(question6)
+
+        // Calculate Better-Worse Coefficients
+        let betterCoefficient = (performanceScore + attractiveScore) / (performanceScore + attractiveScore + basicScore + indifferentScore)
+        let worseCoefficient = (-1) * (performanceScore + basicScore) / (performanceScore + attractiveScore + basicScore + indifferentScore)
+
+        // Store the scores for display
+        self.kanoScores = [
+            ("Basic", basicScore),
+            ("Attractive", attractiveScore),
+            ("Performance", performanceScore),
+            ("Indifferent", indifferentScore),
+            ("Better Coefficient", betterCoefficient),
+            ("Worse Coefficient", worseCoefficient)
+        ]
     }
 }
 
@@ -72,7 +112,9 @@ struct QuestionnaireView: View {
     @Binding var question4: Int
     @Binding var question5: Int
     @Binding var question6: Int
-    
+
+    var onSubmit: () -> Void
+
     var body: some View {
         NavigationView {
             Form {
@@ -95,8 +137,7 @@ struct QuestionnaireView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Submit") {
-                        // Calculate scores
-                        calculateKanoModelScores()
+                        onSubmit()
                     }
                 }
                 ToolbarItem(placement: .cancellationAction) {
@@ -107,40 +148,12 @@ struct QuestionnaireView: View {
             }
         }
     }
-    
-    func calculateKanoModelScores() {
-        // Calculate Basic, Attractive, Performance, Indifferent Scores
-        let basicScore = Double(question1 + question2) / 2
-        let attractiveScore = Double(question3 + question4) / 2
-        let performanceScore = Double(question5)
-        let indifferentScore = Double(question6)
-        
-        // Calculate Better-Worse Coefficients
-        let betterCoefficient = (performanceScore + attractiveScore) / (performanceScore + attractiveScore + basicScore + indifferentScore)
-        let worseCoefficient = (-1) * (performanceScore + basicScore) / (performanceScore + attractiveScore + basicScore + indifferentScore)
-        
-        // Log the results for now (can be stored or displayed in the UI)
-        print("Basic Score: \(basicScore)")
-        print("Attractive Score: \(attractiveScore)")
-        print("Performance Score: \(performanceScore)")
-        print("Indifferent Score: \(indifferentScore)")
-        print("Better Coefficient: \(betterCoefficient)")
-        print("Worse Coefficient: \(worseCoefficient)")
-        
-        // Display the results in a chart
-        showKanoModelChart(basicScore: basicScore, attractiveScore: attractiveScore, performanceScore: performanceScore, indifferentScore: indifferentScore, betterCoefficient: betterCoefficient, worseCoefficient: worseCoefficient)
-    }
-    
-    func showKanoModelChart(basicScore: Double, attractiveScore: Double, performanceScore: Double, indifferentScore: Double, betterCoefficient: Double, worseCoefficient: Double) {
-        // Present a chart or some kind of diagram based on the calculated scores
-        // This could be a bar chart or radar chart representing the scores
-    }
 }
 
 struct QuestionView: View {
     var question: String
     @Binding var rating: Int
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             Text(question)
