@@ -10,6 +10,7 @@
 		FA192E512BFFBC66009CBD31 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FA192E502BFFBC66009CBD31 /* RealmSwift */; };
 		FA192E532BFFBD94009CBD31 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA192E522BFFBD93009CBD31 /* Color.swift */; };
 		FA192E582C00A0A7009CBD31 /* ExpensesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA192E572C00A0A7009CBD31 /* ExpensesList.swift */; };
+		FA29B6122CA3F93D00A62592 /* AnalyzeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA29B6112CA3F92B00A62592 /* AnalyzeView.swift */; };
 		FA31E8D02BEA16B9009EC97D /* Period.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA31E8CF2BEA16B9009EC97D /* Period.swift */; };
 		FA5C53C82BDBBED800C4AF6C /* TotalCurrencyBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5C53C72BDBBED800C4AF6C /* TotalCurrencyBox.swift */; };
 		FA5C53CA2BDBC05700C4AF6C /* KeyboardUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5C53C92BDBC05700C4AF6C /* KeyboardUtilities.swift */; };
@@ -50,6 +51,7 @@
 /* Begin PBXFileReference section */
 		FA192E522BFFBD93009CBD31 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		FA192E572C00A0A7009CBD31 /* ExpensesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesList.swift; sourceTree = "<group>"; };
+		FA29B6112CA3F92B00A62592 /* AnalyzeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyzeView.swift; sourceTree = "<group>"; };
 		FA31E8CF2BEA16B9009EC97D /* Period.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Period.swift; sourceTree = "<group>"; };
 		FA5C53C72BDBBED800C4AF6C /* TotalCurrencyBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalCurrencyBox.swift; sourceTree = "<group>"; };
 		FA5C53C92BDBC05700C4AF6C /* KeyboardUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardUtilities.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 		FA85DBED2BBDCF5100533BCA /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				FA29B6112CA3F92B00A62592 /* AnalyzeView.swift */,
 				FA85DBF12BBDD1E300533BCA /* Reports.swift */,
 				FA85DBFC2BD1A1CF00533BCA /* Add.swift */,
 				FA85DBF32BBF269F00533BCA /* Settings.swift */,
@@ -265,6 +268,7 @@
 				FA5C53C82BDBBED800C4AF6C /* TotalCurrencyBox.swift in Sources */,
 				FA73018E2BB1CA5D00EC8520 /* ContentView.swift in Sources */,
 				FA73018A2BB1CA5D00EC8520 /* AppDelegate.swift in Sources */,
+				FA29B6122CA3F93D00A62592 /* AnalyzeView.swift in Sources */,
 				FA85DC022BD1A4B000533BCA /* Currency.swift in Sources */,
 				FA192E532BFFBD94009CBD31 /* Color.swift in Sources */,
 				FA85DBF22BBDD1E300533BCA /* Reports.swift in Sources */,

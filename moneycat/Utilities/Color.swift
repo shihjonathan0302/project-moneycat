@@ -26,7 +26,15 @@ public class PersistableColor: EmbeddedObject {
     }
 }
 
-extension Color: CustomPersistable {
+extension Color: @retroactive _CustomPersistable {}
+extension Color: @retroactive _RealmCollectionValueInsideOptional {}
+extension Color: @retroactive RealmCollectionValue {}
+extension Color: @retroactive _HasPersistedType {}
+extension Color: @retroactive _ObjcBridgeable {}
+extension Color: @retroactive _PersistableInsideOptional {}
+extension Color: @retroactive _Persistable {}
+extension Color: @retroactive _RealmSchemaDiscoverable {}
+extension Color: @retroactive CustomPersistable {
     public typealias PersistedType = PersistableColor
     
     public init(persistedValue: PersistableColor) {
