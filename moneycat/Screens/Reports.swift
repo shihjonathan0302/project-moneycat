@@ -2,19 +2,12 @@
 //  Reports.swift
 //  moneycat
 //
-//  Created by Jonathan Shih on 2024/4/4.
-//
-
-//
-//  Reports.swift
-//  moneycat
-//
-//  Created by Jonathan Shih on 2024/4/4.
+//  Created by Jonathan Shih on 2024/4/４.
 //
 
 import SwiftUI
-import Charts
 import RealmSwift
+import Charts
 
 struct Reports: View {
     @EnvironmentObject var realmManager: RealmManager
@@ -26,67 +19,64 @@ struct Reports: View {
     }
 
     var body: some View {
-        NavigationStack {
-            VStack {
-                // Show the Kano Model chart
-                Chart(wantExpenses) { expense in
-                    PointMark(
-                        x: .value("Worse", calculateWorseCoefficient(expense: expense)),  // Worse coefficient in percentage
-                        y: .value("Better", calculateBetterCoefficient(expense: expense))  // Better coefficient in percentage
-                    )
-                    .foregroundStyle(by: .value("Category", expense.category?.name ?? "Other"))
-                }
-                .frame(height: 300)
-                .padding()
-
-                // List of 'Want' expenses
-                List(wantExpenses) { expense in
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text(expense.note)
-                                .font(.headline)
-                            Text("Amount: \(expense.amount, specifier: "%.2f")")
-                            Text("Category: \(expense.category?.name ?? "No Category")")
+        NavigationView {
+            VStack {s
+                if wantExpenses.isEmpty {
+                    Text("No 'Want' expenses to analyze")
+                        .font(.title2)
+                        .foregroundColor(.gray)
+                } else {
+                    List(wantExpenses) { expense in
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(expense.note)
+                                    .font(.headline)
+                                Text("Amount: \(String(format: "%.2f", expense.amount))")
+                                Text("Category: \(expense.category?.name ?? "No Category")")
+                                Text("Date: \(expense.date, formatter: DateFormatter.shortDate)")
+                            }
+                            Spacer()
+                            Button(action: {
+                                self.selectedExpense = expense
+                                self.showingAnalyze = true
+                            }) {
+                                Text("Analyze")
+                                    .foregroundColor(.blue)
+                            }
                         }
-                        Spacer()
-                        Button("Analyze") {
-                            selectedExpense = expense
-                            showingAnalyze = true
-                        }
-                        .foregroundColor(.blue)
                     }
                 }
 
-                // Button at the bottom for going to AnalyzeView
-                Button("Go to Analyze") {
-                    if selectedExpense != nil {
-                        showingAnalyze = true
-                    } else {
-                        print("Please select an expense to analyze")
+                if let selectedExpense = selectedExpense {
+                    // Show the chart
+                    Chart {
+                        ForEach(wantExpenses, id: \.self) { expense in
+                            PointMark(
+                                x: .value("Worse Coefficient", expense.worseCoefficient * 100), // Converting to percentage
+                                y: .value("Better Coefficient", expense.betterCoefficient * 100) // Converting to percentage
+                            )
+                            .symbolSize(expense.amount) // Point size representing amount
+                        }
                     }
+                    .axisY(.leading) // Move Y axis to the left
+                    .frame(height: 300)
+                    .padding(.horizontal)
                 }
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(Color.blue)
-                .foregroundColor(.white)
-                .cornerRadius(8)
             }
             .navigationTitle("Reports")
-            .navigationDestination(isPresented: $showingAnalyze) {
-                if let selectedExpense = selectedExpense {
-                    AnalyzeView(expense: selectedExpense)
+            .sheet(isPresented: $showingAnalyze) {
+                if let expense = selectedExpense {
+                    AnalyzeView(expenses: [expense])
                 }
             }
         }
     }
+}
 
-    // Example function to calculate Better coefficient
-    func calculateBetterCoefficient(expense: Expense) -> Double {
-        return Double.random(in: 0...1) * 100  // Convert to percentage
-    }
-
-    // Example function to calculate Worse coefficient
-    func calculateWorseCoefficient(expense: Expense) -> Double {
-        return Double.random(in: -1...0) * 100  // Convert to percentage
-    }
+extension DateFormatter {
+    static let shortDate: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        return formatter
+    }()
 }

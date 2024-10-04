@@ -101,7 +101,6 @@ class RealmManager: ObservableObject {
                 try localRealm.write {
                     localRealm.deleteAll()
                 }
-                // Reload data after erasing to refresh the UI
                 loadExpenses()
                 loadCategories()
                 addDefaultCategoriesIfNeeded(force: true)
